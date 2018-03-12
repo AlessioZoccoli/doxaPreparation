@@ -1,4 +1,6 @@
-import re
+from nltk.corpus import stopwords
+import re, string, operator
+from collections import Counter
 
 emoticons_str = r"""
     (?:
@@ -20,16 +22,17 @@ regex_str = [
     r'(?:\S)'  # anything else
 ]
 
-#
-# VERBOSE allows spaces in the regexp to be ignored
-# IGNORECASE for case insensitivity
-#
+#################################################################
+#       VERBOSE allows spaces in the regexp to be ignored       #
+#       IGNORECASE for case insensitivity                       #
+#################################################################
 tokens_re = re.compile(r'(' + '|'.join(regex_str) + ')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^' + emoticons_str + '$', re.VERBOSE | re.IGNORECASE)
 
 
 def tokenize(text):
     return tokens_re.findall(text)
+
 
 
 def preprocess(text, lowercase=False):
@@ -51,3 +54,38 @@ def preprocess(text, lowercase=False):
     if lowercase:
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
+
+############################
+#    Stop words handling   #
+############################
+
+punctuation = list(string.punctuation)
+stop = stopwords.words('english') + punctuation + ['rt', 'RT', 'via']
+
+def termsAndEmoji(tokens):
+    """
+    :param tokens: list of tokens
+    :return: same list without stop words, links and mentions
+    """
+    return [t for t in tokens if t not in stop and not t.startswith(('@', 'http', 'https'))]
+
+
+
+############################
+#    Words frequency       #
+############################
+
+def nMostCommonTerms(docs, n):
+    """
+    nMostCommonTerms(mongoCollection.find(), 4)
+    [('#Oscars', 200), ('Official', 100), ('night', 90), ('The', 89)]
+
+    :param docs: Documents of mongoDB collection.
+    :param n: int. n most common terms
+    :return: list of tuples [('term'), k]
+    """
+    _count = Counter()
+    for tweet in docs:
+        _terms = termsAndEmoji(preprocess(tweet['text']))
+        _count.update(set(_terms))
+    return _count.most_common(n)
