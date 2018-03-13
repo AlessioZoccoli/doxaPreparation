@@ -32,5 +32,4 @@ date4 = '2018-03-06'
 
 # Querying and storing data in mongo
 # queryString, sinceDate, untilDate, mongoCollection, language='en'
-#  ====>  query2TopicDates(queryOscars, date3, date4, coll)
-
+query2TopicDates(queryOscars, date3, date4, coll)

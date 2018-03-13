@@ -89,3 +89,4 @@ def nMostCommonTerms(docs, n):
         _terms = termsAndEmoji(preprocess(tweet['text']))
         _count.update(set(_terms))
     return _count.most_common(n)
+
