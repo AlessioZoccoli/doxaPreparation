@@ -1,8 +1,4 @@
 from setup import *
-from bson import json_util
-
-api = twitter_setup_AppOnly()
-
 
 
 ##########################################################################
@@ -29,8 +25,13 @@ def query2TopicDates(queryString, sinceDate, untilDate, mongoCollection, languag
     :return: None
     """
 
+    # Calling the right APIs
+    api = twitter_setup_AppOnly()
+
     for tweet in tweepy.Cursor(api.search, q=queryString, count=100, lan=language, since=sinceDate, until=untilDate).items():
         if(tweet.lang == "en"):
             mongoCollection.insert_one(tweet._json)
 
     print('{:d}'.format(mongoCollection.count()))
+
+# TODO Query per ogni utente selezionato

@@ -1,13 +1,12 @@
 from textblob import TextBlob
 from lib.language.languageProcessing import cleanedTweet
-
+import lib.emojis
 
 ##########################################################################
 #                                                                        #
 #   Sentiment Analysis with textblob                                     #
 #                                                                        #
 ##########################################################################
-
 
 def tweetPolarity(tweetText):
     polarity = TextBlob(cleanedTweet(tweetText)).polarity
@@ -34,3 +33,14 @@ def tweetPolarityOneHot(tweetText):
         category = (0,0,1)
 
     return (polarity, category)
+
+
+###############################################################################################################
+#                                                                                                             #
+#    Sentiment Orientation with PMI:                                                                          #
+#       SO(t) = SUM( PMI(t,t') for t' in PosVocab) -  SUM( PMI(t,t') for t' in NegVocab)                      #
+#                                                                                                             #
+#       P(t) = DF(t)/|D|                                                                                      #
+#       P(t1, t2) = DF(t1, t2)/|D|                                                                            #
+#                                                                                                             #
+###############################################################################################################
