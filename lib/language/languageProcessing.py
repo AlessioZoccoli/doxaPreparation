@@ -2,6 +2,22 @@ from nltk.corpus import stopwords
 import re, string, operator
 from collections import Counter, defaultdict
 
+############################
+#    Stop words handling   #
+############################
+
+
+# … != ... and seems to occur a lot
+punctuation = list(string.punctuation)
+stop = stopwords.words('english') + punctuation + ['rt', 'via', '…']
+
+
+#################################################################
+#               More complex data manipulation                  #
+#                                                               #
+#################################################################
+
+
 emoticons_str = r"""
     (?:
         [:=;] # Eyes
@@ -22,10 +38,9 @@ regex_str = [
     r'(?:\S)'  # anything else
 ]
 
-#################################################################
-#       VERBOSE allows spaces in the regexp to be ignored       #
-#       IGNORECASE for case insensitivity                       #
-#################################################################
+#       VERBOSE allows spaces in the regexp to be ignored
+#       IGNORECASE for case insensitivity
+
 tokens_re = re.compile(r'(' + '|'.join(regex_str) + ')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^' + emoticons_str + '$', re.VERBOSE | re.IGNORECASE)
 
@@ -56,15 +71,6 @@ def preprocess(text, lowercase=False):
     return tokens
 
 
-############################
-#    Stop words handling   #
-############################
-
-# … != ... and seems to occur a lot
-punctuation = list(string.punctuation)
-stop = stopwords.words('english') + punctuation + ['rt', 'via', '…']
-
-
 def termsAndEmoji(tokens):
     """
     :param tokens: list of tokens
@@ -73,9 +79,15 @@ def termsAndEmoji(tokens):
     return [t for t in tokens if t not in stop and not t.startswith(('@', 'http:', 'https:'))]
 
 
+def cleanedTweet(tweetText):
+    _tokens = termsAndEmoji(tokenize(tweetText))
+    return ' '.join(_tokens)
+
+
 ############################
 #    Terms frequency       #
 ############################
+
 
 def nMostCommonTerms(docs, n):
     """
@@ -97,6 +109,7 @@ def nMostCommonTerms(docs, n):
 #    Terms co-occurrences        #
 ##################################
 
+
 def nMostCommonCooccurrences(docs, n):
     """
     nMostCommonCooccurrences(collection, 3)
@@ -107,14 +120,14 @@ def nMostCommonCooccurrences(docs, n):
     """
 
     # If retrieving/updating a non existing value, return a default value specified as defaultdict argument (eg. int)
-    comatrix = defaultdict(lambda : defaultdict(int))
+    comatrix = defaultdict(lambda: defaultdict(int))
 
     # Populating the matrix
     for tweet in docs:
         _terms = termsAndEmoji(preprocess(tweet['text'], lowercase=True))
 
         for i in range(len(_terms) - 1):
-            for j in range(i+1, len(_terms)):
+            for j in range(i + 1, len(_terms)):
                 term1, term2 = sorted([_terms[i], _terms[j]])
                 if term1 != term2:
                     comatrix[term1][term2] += 1
@@ -130,3 +143,5 @@ def nMostCommonCooccurrences(docs, n):
 
     mostCommons = sorted(commons, key=operator.itemgetter(1), reverse=True)[:n]
     return mostCommons
+
+

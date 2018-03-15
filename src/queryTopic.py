@@ -32,4 +32,4 @@ dateSince = config.sinceDateTopic
 
 # Querying and storing data in mongo
 # queryString, sinceDate, untilDate, mongoCollection, language='en'
-query2TopicDates(queryString, dateSince , dateUntil, collection)
+# ==> query2TopicDates(queryString, dateSince , dateUntil, collection)
