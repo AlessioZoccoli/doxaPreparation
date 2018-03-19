@@ -12,3 +12,5 @@ Thumbs.db
 .idea
 
 credentials.py
+
+./test/pmitest.py

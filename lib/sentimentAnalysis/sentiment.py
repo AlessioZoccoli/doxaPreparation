@@ -1,6 +1,6 @@
 from textblob import TextBlob
 from lib.language.languageProcessing import cleanedTweet
-import lib.emojis
+
 
 ##########################################################################
 #                                                                        #

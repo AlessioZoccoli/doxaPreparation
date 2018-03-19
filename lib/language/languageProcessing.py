@@ -1,6 +1,7 @@
 from nltk.corpus import stopwords
 import re, string, operator
 from collections import Counter, defaultdict
+from math import log2
 
 ############################
 #    Stop words handling   #
@@ -8,8 +9,10 @@ from collections import Counter, defaultdict
 
 
 # … != ... and seems to occur a lot
+from lib.emojis import emoji2words
+
 punctuation = list(string.punctuation)
-stop = stopwords.words('english') + punctuation + ['rt', 'via', '…', '“', '’']
+stop = stopwords.words('english') + punctuation + ['rt', 'via', '…', '“', '’', '!', ',', '?']
 
 
 #################################################################
@@ -69,6 +72,8 @@ def preprocess(text, lowercase=False):
     :return: List of tokens
     """
     tokens = tokenize(text)
+    tokens = [t if t not in emoji2words else emoji2words[t] for t in tokens]
+
     if lowercase:
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
@@ -102,6 +107,7 @@ def mostCommonTerms(docs, n):
     """
     _count = Counter()
     for tweet in docs:
+        print(tweet)
         _terms = termsAndEmoticons(preprocess(tweet['text'], lowercase=True))
         _count.update(set(_terms))
 
@@ -207,18 +213,37 @@ def nMostCommonCooccurrences2(docs, n):
 #                                                                                                             #
 ###############################################################################################################
 
-def pmi(commonTerms, cooccurMat, nTweets):
+def pmi(commonTerms, cooccurMat, nTweets, posVocab, negVocab):
     """
-    :param commonTerms: Counter.items() tuple of terms and theri frequencies
+    :param commonTerms: Counter.items() tuple of terms and their frequencies (mostCommonTerms)
     :param cooccurMat: cooccurrences matrix
     :param nTweets: number of documents/tweets
+    :param posVocab: vocabulary of positive terms
+    :param negVocab: voabulary of negative terms
     :return: dict of distributions (see above)
     """
 
     p_t = {}
     p_t_com = defaultdict(lambda: defaultdict(int))
 
+    #Probabilities
     for term1, n in commonTerms:
         p_t[term1] = n/float(nTweets)
         for term2 in cooccurMat[term1]:
             p_t_com[term1][term2] = cooccurMat[term1][term2]/float(nTweets)
+
+
+    _pmi = defaultdict(lambda : defaultdict(int))
+    for t1 in p_t:
+        for t2 in cooccurMat[t1]:
+            denominator = p_t[t1]*p_t[t2]
+            _pmi[t1][t2] = log2(p_t_com[t1][t2] / denominator)
+
+    #Semantic Orientation
+    orient = {}
+    for term, n in p_t.items():
+        positives = sum(_pmi[term][tx] for tx in posVocab)
+        negatives = sum(_pmi[term][tx] for tx in negVocab)
+        orient[term] = positives - negatives
+
+    return sorted(orient.items(), key = operator.itemgetter(1), reverse=True)
