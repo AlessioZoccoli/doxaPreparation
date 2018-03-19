@@ -32,6 +32,6 @@ def query2TopicDates(queryString, sinceDate, untilDate, mongoCollection, languag
         if(tweet.lang == "en"):
             mongoCollection.insert_one(tweet._json)
 
-    print('{:d}'.format(mongoCollection.count()))
+    print('{:d} counted'.format(mongoCollection.count()))
 
-# TODO Query per ogni utente selezionato
+
