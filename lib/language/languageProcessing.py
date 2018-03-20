@@ -92,6 +92,7 @@ def cleanedTweet(tweetText):
     return ' '.join(_tokens)
 
 
+
 ############################
 #    Terms frequency       #
 ############################
@@ -117,10 +118,6 @@ def mostCommonTerms(docs, n):
         return _count.most_common(n)
 
 
-
-##################################
-#    Terms co-occurrences        #
-##################################
 
 def cooccurrenceMatrix(docs):
 
@@ -203,18 +200,16 @@ def nMostCommonCooccurrences2(docs, n):
     return mostCommons
 
 
-###############################################################################################################
-#                                                                                                             #
-#    The PMI of a pair of outcomes x and y belonging to discrete random variables X and Y                     #
-#    quantifies the discrepancy between the probability of their coincidence given their joint distribution   #
-#    and their individual distributions, assuming independence.                                               #
-#                                                                                                             #
-#       PMI(t_1, t_2) = log( P(t_1, t_2) / (P(t_1), P(t_2)) )                                                 #
-#                                                                                                             #
-###############################################################################################################
-
 def pmi(commonTerms, cooccurMat, nTweets, posVocab, negVocab):
     """
+
+    The PMI of a pair of outcomes x and y belonging to discrete random variables X and Y
+    quantifies the discrepancy between the probability of their coincidence given their joint distribution
+    and their individual distributions, assuming independence.
+
+       PMI(t_1, t_2) = log( P(t_1, t_2) / (P(t_1), P(t_2)) )
+
+
     :param commonTerms: Counter.items() tuple of terms and their frequencies (mostCommonTerms)
     :param cooccurMat: cooccurrences matrix
     :param nTweets: number of documents/tweets

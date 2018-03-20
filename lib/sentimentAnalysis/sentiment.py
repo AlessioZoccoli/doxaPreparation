@@ -35,12 +35,13 @@ def tweetPolarityOneHot(tweetText):
     return (polarity, category)
 
 
-###############################################################################################################
-#                                                                                                             #
-#    Sentiment Orientation with PMI:                                                                          #
-#       SO(t) = SUM( PMI(t,t') for t' in PosVocab) -  SUM( PMI(t,t') for t' in NegVocab)                      #
-#                                                                                                             #
-#       P(t) = DF(t)/|D|                                                                                      #
-#       P(t1, t2) = DF(t1, t2)/|D|                                                                            #
-#                                                                                                             #
-###############################################################################################################
+"""
+
+Sentiment Orientation with PMI:                                                                          
+
+SO(t) = SUM( PMI(t,t') for t' in PosVocab) -  SUM( PMI(t,t') for t' in NegVocab)                      
+                                                                                                             
+P(t) = DF(t)/|D|                                                                                      
+P(t1, t2) = DF(t1, t2)/|D|                                                                            
+                                                                                                             
+"""

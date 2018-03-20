@@ -1,25 +1,16 @@
-from bson import json_util
 from pymongo import MongoClient
+from collections import Counter, defaultdict
 import config
 
-##########################
-#                        #
-#   MongoDB Connection   #
-#                        #
-##########################
 
 dbClient = MongoClient(config.db_client)
 collection = dbClient[config.db_name][config.db_collection_name]
 
 
-###########################################
-#                                         #
-#        getting N random users           #
-#                                         #
-###########################################
-
 def getNRandomUsers(n, coll):
     """
+     getting N random users
+
     getNRandomUsers(100, db.myColl)
     :param n: number of users
     :param coll: db collection
@@ -39,7 +30,6 @@ def getNRandomUsers(n, coll):
         randUsers.update(moreUsers)
 
     return randUsers
-
 
 
 """
@@ -62,19 +52,28 @@ print(getNRandomUsers(100, collection))
 
 """
 
-###########################################
-#                                         #
-#        getting every users              #
-#                                         #
-###########################################
 
 def getAllUsers(coll):
-    return set([user['user']['screen_name'] for user in coll.find({}, {"user.screen_name":True})])
+    """
+    getting every users
+    :param coll:
+    :return: set of all users's screen_names
+    """
+    return set([user['user']['screen_name'] for user in coll.find({}, {"user.screen_name": True})])
 
 
-######################################################
-#                                                    #
-#        getting every users and #tweets             #
-#                                                    #
-######################################################
 
+
+def mostActiveUsers(coll):
+    """
+    getting the most active users (by number of tweets)
+    :param coll:
+    :return:
+    """
+    _count = Counter()
+    _count.update([user['user']['screen_name'] for user in coll.find({}, {"user.screen_name": True})])
+
+    return _count.most_common()
+
+
+print(mostActiveUsers(collection))
