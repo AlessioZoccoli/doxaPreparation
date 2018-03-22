@@ -5,8 +5,9 @@ from lib.language.languageProcessing import cleanedTweet
 
     Sentiment Analysis with TextBlob
     
-    TextBlobs uses
-
+    TextBlobs uses the following dictionary:
+    https://github.com/sloria/TextBlob/blob/dev/textblob/en/en-sentiment.xml
+    
 
 """
 
