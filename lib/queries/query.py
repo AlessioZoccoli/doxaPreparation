@@ -27,25 +27,33 @@ def queryTopic(queryString, sinceDate, untilDate, mongoCollection, language='en'
     :return: None
     """
 
-    # Calling the right APIs
     api = twitter_setup_AppOnly()
 
-    for tweet in tweepy.Cursor(api.search, q=queryString, count=100, lan=language, since=sinceDate, until=untilDate).items():
-        if(tweet.lang == "en"):
+    for tweet in tweepy.Cursor(api.search, q=queryString, count=100, lan=language, since=sinceDate,
+                               until=untilDate).items():
+        if (tweet.lang == language):
             mongoCollection.insert_one(tweet._json)
 
     print('{:d} counted'.format(mongoCollection.count()))
 
 
-def queryUserTweets(screenName, nTweets, sinceDate, untilDate, mongoCollection, language='en'):
+def queryUserTweets(screenName, nTweets, mongoCollection, language='en'):
     """
-    Querying twitter by specifying user's screen_name. Screen name
+    Querying twitter by specifying user's screen_name
 
-    :param screenName:
-    :param nTweets:
-    :param sinceDate:
-    :param untilDate:
-    :param mongoCollection:
-    :param language:
-    :return:
+    :param screenName: screen_name of the user's tweet
+    :param nTweets: passed as count parameter to Cursor, max = 200
+    :param mongoCollection: mongoDB collection
+    :param language: language, default 'en'
+    :return: None
     """
+
+    if nTweets>200:
+        nTweets = 200
+
+    api = twitter_setup_AppOnly()
+    for tweet in tweepy.Cursor(api.user_timeline, count = nTweets, show_user = True).items():
+        if tweet.lang == language:
+            mongoCollection.insert_one(tweet._json)
+
+    print('{:d} counted'.format(mongoCollection.count()))
