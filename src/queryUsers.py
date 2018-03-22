@@ -76,4 +76,3 @@ def mostActiveUsers(coll):
     return _count.most_common()
 
 
-print(mostActiveUsers(collection))

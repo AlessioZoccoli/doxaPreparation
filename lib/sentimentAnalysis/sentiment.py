@@ -1,14 +1,23 @@
 from textblob import TextBlob
 from lib.language.languageProcessing import cleanedTweet
 
+"""
 
-##########################################################################
-#                                                                        #
-#   Sentiment Analysis with textblob                                     #
-#                                                                        #
-##########################################################################
+    Sentiment Analysis with TextBlob
+    
+    TextBlobs uses
+
+
+"""
+
 
 def tweetPolarity(tweetText):
+    """
+    tweetPolarity("Great") -> (1.0, "Positive")
+
+    :param tweetText: String. Text of the tweet
+    :return: tuple (Int, String) with polarity and sentiment class as a textual label
+    """
     polarity = TextBlob(cleanedTweet(tweetText)).polarity
 
     if polarity > 0:
@@ -21,8 +30,14 @@ def tweetPolarity(tweetText):
     return (polarity, category)
 
 
-# (POSITIVE, NEUTRAL, NEGATIVE)
+
 def tweetPolarityOneHot(tweetText):
+    """
+    tweetPolarityOneHot("Great") -> (1.0, (1,0,0))
+
+    :param tweetText: String. Text of the tweet
+    :return: tuple (Int, tuple(Int)) with polarity and sentiment class one hot encoded
+    """
     polarity = TextBlob(cleanedTweet(tweetText)).polarity
 
     if polarity > 0:
@@ -33,6 +48,7 @@ def tweetPolarityOneHot(tweetText):
         category = (0,0,1)
 
     return (polarity, category)
+
 
 
 """

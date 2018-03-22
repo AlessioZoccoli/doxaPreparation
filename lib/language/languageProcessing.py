@@ -3,6 +3,7 @@ import re, string, operator
 from collections import Counter, defaultdict
 from math import log2
 
+
 ############################
 #    Stop words handling   #
 ############################
@@ -79,6 +80,7 @@ def preprocess(text, lowercase=False):
     return tokens
 
 
+# TextBlobs lemmatization?
 def termsAndEmoticons(tokens):
     """
     :param tokens: list of tokens

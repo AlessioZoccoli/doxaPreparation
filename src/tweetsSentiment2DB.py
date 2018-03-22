@@ -2,11 +2,7 @@ from pymongo import MongoClient
 import config
 from lib.sentimentAnalysis.sentiment import tweetPolarityOneHot
 
-##########################
-#                        #
-#   MongoDB Connection   #
-#                        #
-##########################
+
 
 dbClient = MongoClient(config.db_client)
 collection = dbClient[config.db_name][config.db_collection_name]

@@ -14,8 +14,10 @@ from setup import *
 ##########################################################################
 
 
-def query2TopicDates(queryString, sinceDate, untilDate, mongoCollection, language='en'):
+def queryTopic(queryString, sinceDate, untilDate, mongoCollection, language='en'):
     """
+
+    Querying twitter by specifying hashtags (related to the topic)
 
     :param queryString: String. Terms (es. hashtag) of interest
     :param sinceDate: String. Twitted not before this date
@@ -35,3 +37,15 @@ def query2TopicDates(queryString, sinceDate, untilDate, mongoCollection, languag
     print('{:d} counted'.format(mongoCollection.count()))
 
 
+def queryUserTweets(screenName, nTweets, sinceDate, untilDate, mongoCollection, language='en'):
+    """
+    Querying twitter by specifying user's screen_name. Screen name
+
+    :param screenName:
+    :param nTweets:
+    :param sinceDate:
+    :param untilDate:
+    :param mongoCollection:
+    :param language:
+    :return:
+    """
