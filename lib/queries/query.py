@@ -1,17 +1,19 @@
 from setup import *
 
+"""
+           Query string                                                
+                                                                        
+   Collecting trending hashtags from                                    
+   http://hashtagify.me/hashtag/<inputHashtag>                          
+   It shows some basic stats about hashtags and some related hashtags   
+                                                                        
+   es. http://hashtagify.me/hashtag/oscars2018                          
+   http://hashtagify.me/hashtag/oscars90  
+   
+   See https://www.hashtags.org/ too                             
+                                                                        
 
-##########################################################################
-#            Query string                                                #
-#                                                                        #
-#   Collecting trending hashtags from                                    #
-#   http://hashtagify.me/hashtag/<inputHashtag>                          #
-#   It shows some basic stats about hashtags and some related hashtags   #
-#                                                                        #
-#   es. http://hashtagify.me/hashtag/oscars2018                          #
-#   http://hashtagify.me/hashtag/oscars90                                #
-#                                                                        #
-##########################################################################
+"""
 
 
 def queryTopic(queryString, sinceDate, untilDate, mongoCollection, language='en'):
@@ -29,12 +31,20 @@ def queryTopic(queryString, sinceDate, untilDate, mongoCollection, language='en'
 
     api = twitter_setup_AppOnly()
 
-    for tweet in tweepy.Cursor(api.search, q=queryString, count=100, lan=language, since=sinceDate,
+    for tweet in tweepy.Cursor(api.search, q=queryString, tweet_mode='extended', count=100, lan=language, since=sinceDate,
                                until=untilDate).items():
-        if (tweet.lang == language):
+        if tweet.lang == language:
             mongoCollection.insert_one(tweet._json)
 
     print('{:d} counted'.format(mongoCollection.count()))
+
+
+"""
+    Given a hashtag this site will give 
+    https://www.hashtags.org/
+    related topics and most prolific users!
+
+"""
 
 
 def queryUserTweets(screenName, nTweets, mongoCollection, language='en'):
@@ -48,11 +58,11 @@ def queryUserTweets(screenName, nTweets, mongoCollection, language='en'):
     :return: None
     """
 
-    if nTweets>200:
+    if nTweets > 200:
         nTweets = 200
 
     api = twitter_setup_AppOnly()
-    for tweet in tweepy.Cursor(api.user_timeline, count = nTweets, show_user = True).items():
+    for tweet in tweepy.Cursor(api.user_timeline, screen_name=screenName, tweet_mode='extended', count=nTweets, show_user=True).items():
         if tweet.lang == language:
             mongoCollection.insert_one(tweet._json)
 

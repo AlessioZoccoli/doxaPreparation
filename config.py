@@ -4,8 +4,19 @@
 #       Topics        #
 #       Here          #
 #                     #
+# hashtagify.com      #
+# hashtags.org        #
 #######################
 
+"""
+
+
+
+    Oscars 2018
+
+
+
+"""
 
 
 # Query
@@ -22,6 +33,32 @@ db_name_oscars2018 = 'test-database-1'
 db_collection_oscars2018 = 'tweets'
 
 
+"""
+
+
+
+    Facebook and Cambridge Analytica, March 2018
+
+
+
+
+"""
+
+#Query
+fbCambridgeAnalytica1 = '#CambridgeAnalytica OR #cambridgeanalytica OR #Trump OR #trump OR  #Facebook OR #facebook OR #Mercer OR #Bannon OR #stevebannon OR #privacy Or #Zuckemberg OR #zuckemberg OR #Facebookgate OR #facebookgate OR #putin OR #Putin OR #brexit OR #Brexit OR #cambridgeanalyticauncovered OR #trumprussia'
+fbCambridgeAnalytica2 = '#CambridgeAnalytica OR #cambridgeanalytica OR #facebook OR #Facebook'
+
+fbCA_date1 = '2018-03-19'
+fbCA_date2 = '2018-03-20'
+fbCA_date3 = '2018-03-21'
+fbCA_date4 = '2018-03-22'
+fbCA_date5 = '2018-03-23'
+
+# DB
+client_mongo_uri_fbCA = 'mongodb://localhost:27017'
+db_name_fbCA = 'fbCambridgenalytica'
+db_collection_fbCA1 = 'tweets1'
+db_collection_fbCA2 = 'tweets2'
 
 #######################
 #                     #
@@ -30,14 +67,14 @@ db_collection_oscars2018 = 'tweets'
 #                     #
 #######################
 
-db_client = client_mongo_uri_oscars2018
-db_name = db_name_oscars2018
-db_collection_name = db_collection_oscars2018
+db_client = client_mongo_uri_fbCA
+db_name = db_name_fbCA
+db_collection_name = db_collection_fbCA2
 
 
-topicQuery = oscars2018
-sinceDateTopic = oscars2018_date2
-untilDateTopic = oscars2018_date3
+topicQuery = fbCambridgeAnalytica2
+sinceDateTopic = fbCA_date4
+untilDateTopic = fbCA_date5
 
 
 

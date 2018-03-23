@@ -5,8 +5,8 @@ CONSUMER_SECRET = ''
 
 # Other data:
 
-OWNER = ''
-OWNNER_ID = ''
+#OWNER = ''
+#OWNNER_ID = ''
 
 # Access:
 ACCESS_TOKEN = ''

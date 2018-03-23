@@ -15,7 +15,7 @@ def addPolarity():
     :return: None
     """
     for doc in collection.find():
-        polarity, category = tweetPolarityOneHot(doc['text'])
+        polarity, category = tweetPolarityOneHot(doc['full_text'])
 
         collection.update_one({"_id": doc["_id"]}, {"$set": {
             "polarity": polarity,

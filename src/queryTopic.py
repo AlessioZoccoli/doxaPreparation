@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import config
 from lib.queries.query import *
+from time import localtime, strftime
 
 
 
@@ -19,6 +20,9 @@ dateSince = config.sinceDateTopic
 
 
 
+print(dbClient, collection, queryString, dateSince, dateUntil)
+print(strftime("%Y-%m-%d %H:%M:%S", localtime()))
+
 # Querying and storing data in mongo
 # queryString, sinceDate, untilDate, mongoCollection, language='en'
-queryTopic(queryString, dateSince, dateUntil, collection)
+#queryTopic(queryString, dateSince, dateUntil, collection)

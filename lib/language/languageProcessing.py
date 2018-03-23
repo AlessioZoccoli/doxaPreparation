@@ -111,7 +111,7 @@ def mostCommonTerms(docs, n):
     _count = Counter()
     for tweet in docs:
         print(tweet)
-        _terms = termsAndEmoticons(preprocess(tweet['text'], lowercase=True))
+        _terms = termsAndEmoticons(preprocess(tweet['full_text'], lowercase=True))
         _count.update(set(_terms))
 
     if(n<=0):
@@ -128,7 +128,7 @@ def cooccurrenceMatrix(docs):
 
     # Populating the matrix
     for tweet in docs:
-        _terms = termsAndEmoticons(preprocess(tweet['text'], lowercase=True))
+        _terms = termsAndEmoticons(preprocess(tweet['full_text'], lowercase=True))
 
         for i in range(len(_terms) - 1):
             for j in range(i + 1, len(_terms)):
@@ -180,7 +180,7 @@ def nMostCommonCooccurrences2(docs, n):
 
     # Populating the matrix
     for tweet in docs:
-        _terms = termsAndEmoticons(preprocess(tweet['text'], lowercase=True))
+        _terms = termsAndEmoticons(preprocess(tweet['full_text'], lowercase=True))
 
         for i in range(len(_terms) - 1):
             for j in range(i + 1, len(_terms)):
