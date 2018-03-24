@@ -14,9 +14,7 @@ from setup import *
                                                                         
 
 """
-
-
-def queryTopic(queryString, sinceDate, untilDate, mongoCollection, language='en'):
+def queryTopic(queryString, sinceDate, untilDate, mongoCollection, catchException, language='en'):
     """
 
     Querying twitter by specifying hashtags (related to the topic)
@@ -34,7 +32,10 @@ def queryTopic(queryString, sinceDate, untilDate, mongoCollection, language='en'
     for tweet in tweepy.Cursor(api.search, q=queryString, tweet_mode='extended', count=100, lan=language, since=sinceDate,
                                until=untilDate).items():
         if tweet.lang == language:
-            mongoCollection.insert_one(tweet._json)
+            try:
+                mongoCollection.insert_one(tweet._json)
+            except catchException:
+                pass
 
     print('{:d} counted'.format(mongoCollection.count()))
 
@@ -45,9 +46,7 @@ def queryTopic(queryString, sinceDate, untilDate, mongoCollection, language='en'
     related topics and most prolific users!
 
 """
-
-
-def queryUserTweets(screenName, nTweets, mongoCollection, language='en'):
+def queryUserTweets(screenName, nTweets, mongoCollection, catchException, language='en'):
     """
     Querying twitter by specifying user's screen_name
 
@@ -62,8 +61,12 @@ def queryUserTweets(screenName, nTweets, mongoCollection, language='en'):
         nTweets = 200
 
     api = twitter_setup_AppOnly()
+
     for tweet in tweepy.Cursor(api.user_timeline, screen_name=screenName, tweet_mode='extended', count=nTweets, show_user=True).items():
         if tweet.lang == language:
-            mongoCollection.insert_one(tweet._json)
+            try:
+                mongoCollection.insert_one(tweet._json)
+            except catchException:
+                pass
 
     print('{:d} counted'.format(mongoCollection.count()))

@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING
 import config
 from lib.sentimentAnalysis.sentiment import tweetPolarityOneHot
 
@@ -7,6 +7,7 @@ from lib.sentimentAnalysis.sentiment import tweetPolarityOneHot
 dbClient = MongoClient(config.db_client)
 collection = dbClient[config.db_name][config.db_collection_name]
 
+collection.create_index([('id_str', ASCENDING)], unique=True)
 
 def addPolarity():
     """

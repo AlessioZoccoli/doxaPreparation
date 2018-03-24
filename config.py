@@ -53,12 +53,14 @@ fbCA_date2 = '2018-03-20'
 fbCA_date3 = '2018-03-21'
 fbCA_date4 = '2018-03-22'
 fbCA_date5 = '2018-03-23'
+fbCA_date6 = '2018-03-24'
 
 # DB
 client_mongo_uri_fbCA = 'mongodb://localhost:27017'
 db_name_fbCA = 'fbCambridgenalytica'
 db_collection_fbCA1 = 'tweets1'
 db_collection_fbCA2 = 'tweets2'
+
 
 #######################
 #                     #
@@ -71,10 +73,6 @@ db_client = client_mongo_uri_fbCA
 db_name = db_name_fbCA
 db_collection_name = db_collection_fbCA2
 
-
 topicQuery = fbCambridgeAnalytica2
-sinceDateTopic = fbCA_date4
-untilDateTopic = fbCA_date5
-
-
-
+sinceDateTopic = fbCA_date5
+untilDateTopic = fbCA_date6

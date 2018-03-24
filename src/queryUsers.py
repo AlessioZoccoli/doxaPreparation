@@ -6,6 +6,8 @@ import config
 dbClient = MongoClient(config.db_client)
 collection = dbClient[config.db_name][config.db_collection_name]
 
+# Remember to add the index !
+# collection.create_index([('id_str', ASCENDING)], unique=True)
 
 def getNRandomUsers(n, coll):
     """
