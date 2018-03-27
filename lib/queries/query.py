@@ -1,5 +1,5 @@
 from setup import *
-from collections import Counter
+from collections import Counter, defaultdict
 
 
 """
@@ -122,9 +122,29 @@ def mostActiveUsers(coll, n):
     _count = Counter()
     _count.update([user['user']['screen_name'] for user in coll.find({}, {"user.screen_name": True})])
 
-    if(n > 0):
+    if n > 0:
         mCommons = _count.most_common(n)
     else:
         mCommons = _count.most_common()
     return mCommons
 
+
+def aggregateByNumOfTweets(coll, n):
+    """
+
+    aggregateByNumOfTweets(mongoCollection, 100): agregates 100 most actives users by number of tweets, descending order.
+
+
+    :param coll: db collection
+    :param n: number of users
+    :return: tuple (nOfTweets, nOfUsers)
+    """
+
+    # new dictionary keys
+    nOfTweets = defaultdict(list)
+    users2nTweets = mostActiveUsers(coll, n)
+
+    for usr, ntweets in users2nTweets:
+        nOfTweets[ntweets].append(usr)
+
+    return {key: len(value) for key,value in nOfTweets.items()}
