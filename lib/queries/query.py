@@ -1,4 +1,6 @@
 from setup import *
+from collections import Counter
+
 
 """
            Query string                                                
@@ -14,6 +16,8 @@ from setup import *
                                                                         
 
 """
+
+
 def queryTopic(queryString, sinceDate, untilDate, mongoCollection, catchException, language='en'):
     """
 
@@ -37,7 +41,7 @@ def queryTopic(queryString, sinceDate, untilDate, mongoCollection, catchExceptio
             except catchException:
                 pass
 
-    print('{:d} counted'.format(mongoCollection.count()))
+    print('{:d} total counted'.format(mongoCollection.count()))
 
 
 """
@@ -46,6 +50,8 @@ def queryTopic(queryString, sinceDate, untilDate, mongoCollection, catchExceptio
     related topics and most prolific users!
 
 """
+
+
 def queryUserTweets(screenName, nTweets, mongoCollection, catchException, language='en'):
     """
     Querying twitter by specifying user's screen_name
@@ -69,4 +75,56 @@ def queryUserTweets(screenName, nTweets, mongoCollection, catchException, langua
             except catchException:
                 pass
 
-    print('{:d} counted'.format(mongoCollection.count()))
+    print('{:d} total counted'.format(mongoCollection.count()))
+
+
+def getNRandomUsers(n, coll):
+    """
+     getting N random users
+
+    getNRandomUsers(100, db.myColl)
+    :param n: number of users
+    :param coll: db collection
+    :return: list of screen_names associated with users
+    """
+
+    randDocs = coll.aggregate([{"$sample": {"size": n}}])
+    randUsers = set([doc["user"]["screen_name"] for doc in randDocs])
+
+    _counter = len(randUsers)
+
+    while _counter < n:
+        moreDocs = coll.aggregate([{"$sample": {"size": n - _counter}}])
+        moreUsers = set([doc["user"]["screen_name"] for doc in moreDocs])
+        _counter = len(moreUsers)
+        print(_counter)
+        randUsers.update(moreUsers)
+
+    return randUsers
+
+
+def getAllUsers(coll):
+    """
+    getting every users
+    :param coll: db collection
+    :return: set of all users's screen_names
+    """
+    return set([user['user']['screen_name'] for user in coll.find({}, {"user.screen_name": True})])
+
+
+def mostActiveUsers(coll, n):
+    """
+    getting the most active users (by number of tweets)
+    :param coll: db collection
+    :param n: number of users
+    :return: tuple (user, nTweets)
+    """
+    _count = Counter()
+    _count.update([user['user']['screen_name'] for user in coll.find({}, {"user.screen_name": True})])
+
+    if(n > 0):
+        mCommons = _count.most_common(n)
+    else:
+        mCommons = _count.most_common()
+    return mCommons
+

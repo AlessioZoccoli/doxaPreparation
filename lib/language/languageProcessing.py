@@ -164,44 +164,6 @@ def nMostCommonCooccurrences(docs, n):
     return mostCommons
 
 
-
-
-def nMostCommonCooccurrences2(docs, n):
-    """
-    nMostCommonCooccurrences2(collection.find(), 3)
-
-    :param docs: mongoDB collection
-    :param n: int. n most common terms cooccurrences
-    :return: Counter of dict_items [('termA', 'termB'), k]
-    """
-
-    # If retrieving/updating a non existing value, return a default value specified as defaultdict argument (eg. int)
-    comatrix = defaultdict(lambda: defaultdict(int))
-
-    # Populating the matrix
-    for tweet in docs:
-        _terms = termsAndEmoticons(preprocess(tweet['full_text'], lowercase=True))
-
-        for i in range(len(_terms) - 1):
-            for j in range(i + 1, len(_terms)):
-                term1, term2 = sorted([_terms[i], _terms[j]])
-                if term1 != term2:
-                    comatrix[term1][term2] += 1
-
-    commons = []
-
-    # For each term search the n most co-occurrent terms
-    # reverse=True : Descending
-    for t1 in comatrix:
-        t1_mostCommons = sorted(comatrix[t1].items(), key=operator.itemgetter(1), reverse=True)[:n]
-        for t2, t2_count in t1_mostCommons:
-            commons.append(((t1, t2), t2_count))
-
-    # n most common co-occurrences
-    mostCommons = sorted(commons, key=operator.itemgetter(1), reverse=True)[:n]
-    return mostCommons
-
-
 def pmi(commonTerms, cooccurMat, nTweets, posVocab, negVocab):
     """
 

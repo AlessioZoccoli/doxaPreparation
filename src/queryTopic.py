@@ -13,7 +13,7 @@ collection = dbClient[config.db_name][config.db_collection_name]
 
 # creates the  index
 collection.create_index([('id_str', ASCENDING)], unique=True)
-print("number of indeces: ", sorted(list(collection.index_information())), "\n")
+print("indeces: ", sorted(list(collection.index_information())), "\n")
 
 
 """
@@ -25,9 +25,11 @@ dateSince = config.sinceDateTopic
 
 
 print(dbClient, collection, queryString, dateSince, dateUntil)
-print(strftime("%Y-%m-%d %H:%M:%S", localtime()))
+print("runned at ", strftime("%Y-%m-%d %H:%M:%S", localtime()))
 
 # Querying and storing data in mongo
 # queryString, sinceDate, untilDate, mongoCollection, language='en'
-queryTopic(queryString, dateSince, dateUntil, collection, errors.DuplicateKeyError)
+
+if __name__ == "__main__":
+    queryTopic(queryString, dateSince, dateUntil, collection, errors.DuplicateKeyError)
 

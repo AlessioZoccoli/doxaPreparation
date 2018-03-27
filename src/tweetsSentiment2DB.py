@@ -1,5 +1,5 @@
-from pymongo import MongoClient, ASCENDING
 import config
+from pymongo import MongoClient
 from lib.sentimentAnalysis.sentiment import tweetPolarityOneHot
 
 
@@ -7,18 +7,16 @@ from lib.sentimentAnalysis.sentiment import tweetPolarityOneHot
 dbClient = MongoClient(config.db_client)
 collection = dbClient[config.db_name][config.db_collection_name]
 
-collection.create_index([('id_str', ASCENDING)], unique=True)
-
-def addPolarity():
+def addPolarity(coll):
     """
     addPolarity() for each document in collection adds its polarity and category in terms of one hot encoding
     eg. (POSITIVE, NEUTRAL, NEGATIVE) -> (1, 0, 0)
     :return: None
     """
-    for doc in collection.find():
+    for doc in coll.find():
         polarity, category = tweetPolarityOneHot(doc['full_text'])
 
-        collection.update_one({"_id": doc["_id"]}, {"$set": {
+        coll.update_one({"_id": doc["_id"]}, {"$set": {
             "polarity": polarity,
             "positive": category[0],
             "neutral": category[1],
@@ -26,3 +24,5 @@ def addPolarity():
         }})
 
 
+if __name__ == "__main__":
+    addPolarity(collection)
