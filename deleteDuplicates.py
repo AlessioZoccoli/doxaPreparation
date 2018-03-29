@@ -1,31 +1,33 @@
 from pymongo import MongoClient
-
-client = MongoClient('mongodb://localhost:27017')
-
-# selecting the collection
-mycoll = client['fbCambridgenalytica']['tweets2']
-
-# this will aggregate all duplicates
-cursor = mycoll.aggregate(
-    [
-        {"$group": {"_id": "$id_str", "unique_ids": {"$addToSet": "$_id"}, "count": {"$sum": 1}}},
-        {"$match": {"count": {"$gte": 2}}}
-    ]
-)
+import config
 
 
+if __name__ == "__main__":
+    client = MongoClient(config.db_clientUsers)
 
-for el in cursor:
-    print("duplicates found --->   ", el)
+    # selecting the collection
+    mycoll = client[config.db_nameUsers][config.db_collectionUsers]
+
+    # this will aggregate all duplicates
+    cursor = mycoll.aggregate(
+        [
+            {"$group": {"_id": "$id_str", "unique_ids": {"$addToSet": "$_id"}, "count": {"$sum": 1}}},
+            {"$match": {"count": {"$gte": 2}}}
+        ]
+    )
 
 
-# Deleting the duplicates
-response = []
-for doc in cursor:
-    del doc["unique_ids"][0]
-    for id in doc["unique_ids"]:
-        response.append(id)
+    for el in cursor:
+        print("duplicates found --->   ", el)
 
-mycoll.delete_many({"_id": {"$in": response}})
+
+    # Deleting the duplicates
+    response = []
+    for doc in cursor:
+        del doc["unique_ids"][0]
+        for id in doc["unique_ids"]:
+            response.append(id)
+
+    mycoll.delete_many({"_id": {"$in": response}})
 
 

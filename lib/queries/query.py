@@ -1,5 +1,6 @@
 from setup import *
 from collections import Counter, defaultdict
+from helpers.rateLimitations import limit_handled
 
 
 """
@@ -52,23 +53,19 @@ def queryTopic(queryString, sinceDate, untilDate, mongoCollection, catchExceptio
 """
 
 
-def queryUserTweets(screenName, nTweets, mongoCollection, catchException, language='en'):
+def queryUserTweets(screenName, nTweets, mongoCollection, catchException, api, language='en'):
     """
     Querying twitter by specifying user's screen_name
 
     :param screenName: screen_name of the user's tweet
     :param nTweets: passed as count parameter to Cursor, max = 200
     :param mongoCollection: mongoDB collection
+    :param catchException: errors due to the index/ces
     :param language: language, default 'en'
     :return: None
     """
 
-    if nTweets > 200:
-        nTweets = 200
-
-    api = twitter_setup_AppOnly()
-
-    for tweet in tweepy.Cursor(api.user_timeline, screen_name=screenName, tweet_mode='extended', count=nTweets, show_user=True).items():
+    for tweet in tweepy.Cursor(api.user_timeline, screen_name=screenName, tweet_mode='extended', count=200, show_user=True).items(nTweets):
         if tweet.lang == language:
             try:
                 mongoCollection.insert_one(tweet._json)
@@ -76,6 +73,38 @@ def queryUserTweets(screenName, nTweets, mongoCollection, catchException, langua
                 pass
 
     print('{:d} total counted'.format(mongoCollection.count()))
+
+
+def queryTweetsFromUsersList(users, nTweets, mongoCollection, catchException, language='en'):
+    """
+
+    :param users: Set of users by their screen_name
+    :param nTweets: passed as count parameter to Cursor, max = 200
+    :param mongoCollection: mongoDB collection (destination)
+    :param catchException: errors due to the index/ces
+    :param language: language, default 'en'
+    :return: None
+    """
+    api = twitter_setup_UserAuth(wait=True)
+
+    print(len(users))
+
+    for user in users:
+        cursor = limit_handled(tweepy.Cursor(api.user_timeline, screen_name=user, tweet_mode='extended', count=200, show_user=True).items(nTweets))
+        for tweet in cursor:
+            if tweet.lang == language:
+                try:
+                    mongoCollection.insert_one(tweet._json)
+                except catchException:
+                    pass
+
+
+
+"""
+
+    Some other useful functions to Analyize users
+
+"""
 
 
 def getNRandomUsers(n, coll):
@@ -148,3 +177,5 @@ def aggregateByNumOfTweets(coll, n):
         nOfTweets[ntweets].append(usr)
 
     return {key: len(value) for key,value in nOfTweets.items()}
+
+

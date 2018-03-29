@@ -8,8 +8,8 @@ from time import localtime, strftime
     Preparing the DB
 
 """
-dbClient = MongoClient(config.db_client)
-collection = dbClient[config.db_name][config.db_collection_name]
+dbClient = MongoClient(config.db_clientTopic)
+collection = dbClient[config.db_nameTopic][config.db_collection_nameTopic]
 
 # creates the  index
 collection.create_index([('id_str', ASCENDING)], unique=True)

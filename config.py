@@ -64,6 +64,16 @@ client_mongo_uri_fbCA = 'mongodb://localhost:27017'
 db_name_fbCA = 'fbCambridgenalytica'
 db_collection_fbCA2 = 'tweets'
 
+#############################################################################
+#                                                                           #
+#       Users  who tweetted about Facebook and Cambridge Analytica          #
+#                                                                           #
+#############################################################################
+
+client_mongo_uri_UsersFbCA = 'mongodb://localhost:27017'
+db_name_UsersTweetFbCa = 'usersFbCA'
+db_collection_UsersFbCa = 'usersTweets'
+
 
 #######################
 #                     #
@@ -72,10 +82,15 @@ db_collection_fbCA2 = 'tweets'
 #                     #
 #######################
 
-db_client = client_mongo_uri_fbCA
-db_name = db_name_fbCA
-db_collection_name = db_collection_fbCA2
+db_clientTopic = client_mongo_uri_fbCA
+db_nameTopic = db_name_fbCA
+db_collection_nameTopic = db_collection_fbCA2
 
 topicQuery = fbCambridgeAnalytica2
 sinceDateTopic = fbCaDates[7]
 untilDateTopic = fbCaDates[8]
+
+
+db_clientUsers = client_mongo_uri_UsersFbCA
+db_nameUsers = db_name_UsersTweetFbCa
+db_collectionUsers = db_collection_UsersFbCa

@@ -3,11 +3,11 @@ from pymongo import MongoClient
 from lib.queries.query import aggregateByNumOfTweets
 
 
-dbClient = MongoClient(config.db_client)
-collection = dbClient[config.db_name][config.db_collection_name]
+dbClient = MongoClient(config.db_clientTopic)
+collection = dbClient[config.db_nameTopic][config.db_collection_nameTopic]
 
-dbClient = MongoClient(config.db_client)
-collection = dbClient[config.db_name][config.db_collection_name]
+dbClient = MongoClient(config.db_clientTopic)
+collection = dbClient[config.db_nameTopic][config.db_collection_nameTopic]
 
 
 print(aggregateByNumOfTweets(collection, 50))
