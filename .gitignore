@@ -10,7 +10,11 @@ Thumbs.db
 
 
 .idea
-
 credentials.py
-
 ./test/pmitest.py
+__pycache__/**
+lib/__pycache__/**
+helpers/__pycache__/**
+lib/language/__pycache__/**
+lib/queries/__pycache__/**
+lib/sentimentAnalysis/__pycache__/**
