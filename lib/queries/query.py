@@ -166,7 +166,7 @@ def aggregateByNumOfTweets(coll, n):
 
     :param coll: db collection
     :param n: number of users
-    :return: tuple (nOfTweets, nOfUsers)
+    :return: dict of tuples (nOfTweets, nOfUsers)
     """
 
     # new dictionary keys
