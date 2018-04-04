@@ -77,7 +77,8 @@ db_collection_fbCA2 = 'tweets'
 
 client_mongo_uri_UsersFbCA = client_mongo_uri_fbCA
 db_name_UsersTweetFbCa = db_name_fbCA
-db_collection_UsersFbCa = 'users100Tweets'
+db_collection_UsersFbCaTweets = 'users100Tweets'    # tweets from 100 selected users
+db_collection_usersFbCaSVO = 'users100SVO'
 
 #######################
 #                     #
@@ -96,4 +97,12 @@ untilDateTopic = fbCaDates[8]
 
 db_clientUsers = client_mongo_uri_UsersFbCA
 db_nameUsers = db_name_UsersTweetFbCa
-db_collectionUsers = db_collection_UsersFbCa
+db_collectionUsersTweets = db_collection_UsersFbCaTweets
+db_collectionUsersSVO = db_collection_usersFbCaSVO
+
+###############
+# Aggregation #
+###############
+aggregationField = "$user.screen_name"
+aggregationFieldShort = "screen_name"
+filterField = "inTopicCollection"

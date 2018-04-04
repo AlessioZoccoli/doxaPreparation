@@ -1,6 +1,5 @@
-from pymongo import MongoClient, errors
-
-from helpers.db.missingRelatedTweets import missingRelatedTweets
+from helpers.db.polarityAndCategory import addPolarityToMissingTweet
+from pymongo import MongoClient
 import config
 
 
@@ -9,5 +8,4 @@ if __name__ == "__main__":
     usersCollection = client[config.db_nameUsers][config.db_collectionUsersTweets]
     topicsCollection = client[config.db_nameTopic][config.db_collection_nameTopic]
 
-    missingRelatedTweets(usersCollection, topicsCollection,
-                         errors.DuplicateKeyError, config.relatedTerms_fbCambridgeAnalytica)
+    addPolarityToMissingTweet(usersCollection, topicsCollection, 'inTopicCollection')

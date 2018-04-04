@@ -6,7 +6,7 @@ if __name__ == "__main__":
     client = MongoClient(config.db_clientUsers)
 
     # selecting the collection
-    mycoll = client[config.db_nameUsers][config.db_collectionUsers]
+    mycoll = client[config.db_nameUsers][config.db_collectionUsersTweets]
 
     # this will aggregate all duplicates
     cursor = mycoll.aggregate(
