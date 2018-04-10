@@ -5,7 +5,7 @@ from lib.language.languageProcessing import *
 
 
 dbClient = MongoClient(config.db_clientTopic)
-collection = dbClient[config.db_nameTopic][config.db_collection_nameTopic]
+collection = dbClient[config.db_topic][config.db_collection_topic]
 
 cooccurrenceMat = {'CooccurrenceMatrix': cooccurrenceMatrix(collection.find())}
 

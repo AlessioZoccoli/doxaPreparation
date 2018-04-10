@@ -45,21 +45,10 @@ db_collection_oscars2018 = 'tweets'
 fbCambridgeAnalytica1 = '#CambridgeAnalytica OR #cambridgeanalytica OR #Trump OR #trump OR  #Facebook OR #facebook OR #Mercer OR #Bannon OR #stevebannon OR #privacy Or #Zuckemberg OR #zuckemberg OR #Facebookgate OR #facebookgate OR #putin OR #Putin OR #brexit OR #Brexit OR #cambridgeanalyticauncovered OR #trumprussia'
 fbCambridgeAnalytica2 = '#CambridgeAnalytica OR #cambridgeanalytica OR #facebook OR #Facebook'
 
-relatedTerms_fbCambridgeAnalytica = set(["CambridgeAnalytica",
-                                     "CambridgeAnalyticaUncovered",
-                                     "CambridgeAnalytics",
-                                     "zuckerberg",
-                                     "Zuckerberg",
-                                     "Facebook",
-                                     "facebook",
-                                     "deleteFacebook",
-                                     "deletefacebook",
-                                     "DeleteFacebook",
-                                     "facebookdown",
-                                     "FacebookDataBreach",
-                                     "MarkZuckerberg",
-                                     "markzuckemberg",])
-
+relatedTerms_fbCambridgeAnalytica = {"CambridgeAnalytica", "CambridgeAnalyticaUncovered", "CambridgeAnalytics",
+                                     "zuckerberg", "Zuckerberg", "Facebook", "facebook", "deleteFacebook",
+                                     "deletefacebook", "DeleteFacebook", "facebookdown", "FacebookDataBreach",
+                                     "MarkZuckerberg", "markzuckemberg"}
 
 fbCaDates = ['2018-03-19', '2018-03-20', '2018-03-21', '2018-03-22', '2018-03-23', '2018-03-24', '2018-03-25',
              '2018-03-26', '2018-03-27']
@@ -76,9 +65,9 @@ db_collection_fbCA2 = 'tweets'
 #############################################################################
 
 client_mongo_uri_UsersFbCA = client_mongo_uri_fbCA
-db_name_UsersTweetFbCa = db_name_fbCA
-db_collection_UsersFbCaTweets = 'users100Tweets'    # tweets from 100 selected users
-db_collection_usersFbCaSVO = 'users100SVO'
+db_usersTweetFbCa = db_name_fbCA
+db_collection_UsersFbCaTweets = 'users100Tweets'  # tweets from 100 selected users
+db_collection_usersFbCaSVO = 'users100SVO'  # these 100 users and SVO attributes
 
 #######################
 #                     #
@@ -88,15 +77,15 @@ db_collection_usersFbCaSVO = 'users100SVO'
 #######################
 
 db_clientTopic = client_mongo_uri_fbCA
-db_nameTopic = db_name_fbCA
-db_collection_nameTopic = db_collection_fbCA2
+db_topic = db_name_fbCA
+db_collection_topic = db_collection_fbCA2
 
 topicQuery = fbCambridgeAnalytica2
 sinceDateTopic = fbCaDates[7]
 untilDateTopic = fbCaDates[8]
 
 db_clientUsers = client_mongo_uri_UsersFbCA
-db_nameUsers = db_name_UsersTweetFbCa
+db_users = db_usersTweetFbCa
 db_collectionUsersTweets = db_collection_UsersFbCaTweets
 db_collectionUsersSVO = db_collection_usersFbCaSVO
 
@@ -105,4 +94,5 @@ db_collectionUsersSVO = db_collection_usersFbCaSVO
 ###############
 aggregationField = "$user.screen_name"
 aggregationFieldShort = "screen_name"
-filterField = "inTopicCollection"
+filteringField = "inTopicCollection"
+db_collectionSelectedNames = 'selectedUsers'

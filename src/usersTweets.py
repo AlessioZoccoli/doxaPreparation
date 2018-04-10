@@ -12,16 +12,11 @@ if __name__ == "__main__":
     dbClientTweets = MongoClient(config.db_clientTopic)
     dbClientUsers = MongoClient(config.db_clientUsers)
 
-    collectionTweets = dbClientTweets[config.db_nameTopic][config.db_collection_nameTopic]
-    collectionUsersTweets = dbClientUsers[config.db_nameUsers][config.db_collectionUsersTweets]
-    # users screen_name and useful info to calculate SVO
-    collectionUsers = dbClientUsers[config.db_nameUsers][config.db_collectionUsersSVO]
+    collectionTweets = dbClientTweets[config.db_topic][config.db_collection_topic]
+    collectionUsersTweets = dbClientUsers[config.db_users][config.db_collectionUsersTweets]
 
-
-    # creates the  indices
+    # creating the  indices
     collectionUsersTweets.create_index([('id_str', ASCENDING)], unique=True)
-    collectionUsers.create_index([('screen_name', ASCENDING)], unique=True)
-
 
     """
         Querying users of interest    
@@ -29,10 +24,13 @@ if __name__ == "__main__":
     """
 
     # calculating the 100 most active users
+    # this will also store the list in a new collection so that other functions (e.g. aggregations for SVO) can read it
     selectedUsers = [usr[0] for usr in mostActiveUsers(collectionTweets, 100)]
 
-    # creating a collection for these users (for SVO)
-    collectionUsers.insert_many([{'screen_name': u} for u in selectedUsers])
+    collectionSelectedUsers = dbClientUsers[config.db_users][config.db_collectionSelectedNames]
+    collectionSelectedUsers.create_index([(config.aggregationFieldShort, ASCENDING)], unique=True)
+    collectionSelectedUsers.insert_many([{config.aggregationFieldShort: u} for u in selectedUsers])
 
-    # Querying note: max nTweets = 3200
+
+    # Twitter API call
     queryTweetsFromUsersList(selectedUsers, 1000, collectionUsersTweets, catchException=errors.DuplicateKeyError)

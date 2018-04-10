@@ -1,4 +1,5 @@
 from bson import SON
+from pymongo import UpdateOne
 
 
 def groupByConditional(fieldGroup, fieldFilter):
@@ -41,7 +42,7 @@ def groupByConditional(fieldGroup, fieldFilter):
 
 def groupByInList(field, usersList):
     """
-    groupByInList return a pipeline which aggregates documents by 'field'
+    groupByInList return a pipeline which aggregates documents by 'field' if id in usersList
 
     :param field: the field on which group is applied
     :param usersList: aggregation only on selected users
@@ -63,21 +64,24 @@ def groupByInList(field, usersList):
 
 """
 
-    SENTIMENT AND OBJECTIVITY!
+    SENTIMENT, OBJECTIVITY and VOLUME
 
 """
-def groupBySentimentsInList(field, usersList):
+
+
+def calculateSentimentObjectivity(field, usersList, outCollection):
     """
-    groupBySentimentsInList return a pipeline which aggregates documents by 'field' and outputs
+    calculateSentimentObjectivity return a pipeline which aggregates documents by 'field' and outputs
     number of positive/neutral/negatives tweets, total tweets (for this topic),
     sentiment and objectivity.
     NOTE: sigmoid not yet applied to sentiment
 
-    eg. groupBySentimentsInList('$user.screen_name', selectedUsers)
+    eg. calculateSentimentObjectivity('$user.screen_name', selectedUsers)
         {'_id': 'Pippo', 'positives': 114, 'negatives': 43, 'neutrals': 521}
 
     :param field: the field on which group is applied
     :param usersList: aggregation only on selected users
+    :param outCollection: collection that will store the aggregation
     :return: list of dicts, the pipeline
     """
 
@@ -98,11 +102,19 @@ def groupBySentimentsInList(field, usersList):
                       "totalTopic": {"$add": ["$positives", "$negatives", "$neutrals"]},
                       "sentiment": {
                           "$divide": [
-                              {"$subtract": ["$positives", "$negatives"]},
-                              {"$add": ["$positives", "$negatives"]}
-                          ]
-                      },
-                      }},
+                              1,
+                              {"$add": [1, {
+                                  "$pow": [
+                                      10,
+                                      {"$multiply": [
+                                          -1, {"$divide": [
+                                              {"$subtract": ["$positives", "$negatives"]},
+                                              {"$add": ["$positives", "$negatives"]}
+                                          ]}
+                                      ]}
+                                  ]}
+                                        ]}]
+                      }}},
         {"$addFields": {
             "objectivity": {
                 "$divide": ["$neutrals", "$totalTopic"]
@@ -110,6 +122,44 @@ def groupBySentimentsInList(field, usersList):
         }},
         {"$match": {"_id": {"$in": usersList}}},
         {"$sort": SON([("_id", +1)])},
+        {"$out": outCollection}
     ]
 
     return pipeline
+
+
+def calculateVolume(fromCursor, toCollection):
+    """
+    e.g.
+        calculateVolume( aggregationUnrelatedCursor, svoCollection)
+
+        Volume = how much a user wrote about a specific topic / everything wrote by this user
+
+    :param fromCursor: cursor from which unrelated tweets count comes from
+    :param toCollection: volume will be added here
+    :return: list of update operations
+    """
+
+    # collection.find(<cond>)[0] because each cursor will only point to one document
+
+    addVolume = [
+        UpdateOne({'_id': el['_id']}, {'$set': {'volume': toCollection.find({'_id': el['_id']})[0]['totalTopic'] / (
+                    toCollection.find({'_id': el['_id']})[0]['totalTopic'] + el['count'])}})
+        for el in fromCursor
+    ]
+    return addVolume
+
+
+def addVolume2Missings(svoColl):
+    """
+    addVolume2Missings(svoCollection) adds volume as
+
+        totalTopic /(totalTopic + 0) = 1
+
+    to those who haven't be affected be the update in the previous function.
+
+    :param svoColl: volume will be added here
+    :return: list of update operations
+    """
+
+    return [UpdateOne({'_id': el['_id']}, {'$set': {'volume': 1}}) for el in svoColl.find({'volume': {'$exists': False}})]

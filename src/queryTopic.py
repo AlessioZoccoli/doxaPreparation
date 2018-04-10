@@ -9,7 +9,7 @@ from time import localtime, strftime
 
 """
 dbClient = MongoClient(config.db_clientTopic)
-collection = dbClient[config.db_nameTopic][config.db_collection_nameTopic]
+collection = dbClient[config.db_topic][config.db_collection_topic]
 
 # creates the  index
 collection.create_index([('id_str', ASCENDING)], unique=True)

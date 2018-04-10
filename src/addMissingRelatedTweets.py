@@ -5,9 +5,9 @@ import config
 
 
 if __name__ == "__main__":
-    client = MongoClient(config.db_clientTopic) #same as topics one now
-    usersCollection = client[config.db_nameUsers][config.db_collectionUsersTweets]
-    topicsCollection = client[config.db_nameTopic][config.db_collection_nameTopic]
+    client = MongoClient(config.db_clientTopic)
+    usersCollection = client[config.db_users][config.db_collectionUsersTweets]
+    topicsCollection = client[config.db_topic][config.db_collection_topic]
 
     missingRelatedTweets(usersCollection, topicsCollection,
                          errors.DuplicateKeyError, config.relatedTerms_fbCambridgeAnalytica)

@@ -5,7 +5,7 @@ import config
 
 
 dbClient = MongoClient(config.db_clientTopic)
-collection = dbClient[config.db_nameTopic][config.db_collection_nameTopic]
+collection = dbClient[config.db_topic][config.db_collection_topic]
 
 positive_vocab = [
     'good', 'nice', 'great', 'awesome', 'outstanding',
